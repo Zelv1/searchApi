@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
           theme: ThemeData(
             textTheme: const TextTheme(
               bodyText2: TextStyle(fontSize: 33),
@@ -38,27 +39,32 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final users = context.select((SearchBloc bloc) => bloc.state.users);
     return Column(
       children: [
-        const Text('Search User'),
+        const Text('Search manga'),
         const SizedBox(height: 20),
         TextFormField(
           decoration: const InputDecoration(
-            hintText: 'User name',
+            hintText: 'Manga name',
             prefixIcon: Icon(Icons.search),
             border: OutlineInputBorder(),
           ),
+          onChanged: (value) {
+            context.read<SearchBloc>().add(SearchUserEvent(value));
+          },
         ),
-        Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return const ListTile(
-                title: Text('name'),
-              );
-            },
-            itemCount: 22,
+        if (users.isNotEmpty)
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(users[index]['title']),
+                );
+              },
+              itemCount: users.length,
+            ),
           ),
-        ),
       ],
     );
   }

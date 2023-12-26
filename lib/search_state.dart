@@ -1,6 +1,10 @@
 part of 'search_bloc.dart';
 
 @immutable
-abstract class SearchState {}
+class SearchState {
+  final List users;
 
-class SearchInitial extends SearchState {}
+  const SearchState({
+    this.users = const [],
+  });
+}
